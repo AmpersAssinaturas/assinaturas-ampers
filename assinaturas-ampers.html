@@ -127,7 +127,7 @@
 
 <header>
   <h1>Assinaturas de e-mail Ampers</h1>
-  <p id="subtitulo">Preencha os dados do colaborador para gerar a assinatura.</p>
+  <p id="subtitulo">Preenche os dados do colaborador para gerar a assinatura.</p>
 </header>
 
 <main>
@@ -139,7 +139,7 @@
     <input id="nome" type="text" placeholder="Filipe Almeida" autocomplete="off">
 
     <label for="cargo">Cargo</label>
-    <input id="cargo" type="text" placeholder="Marketing Director" autocomplete="off">
+    <input id="cargo" type="text" placeholder="Executive Director" autocomplete="off">
 
     <label for="tel">Nº telemóvel</label>
     <input id="tel" type="text" placeholder="+351 969 730 083" autocomplete="off">
@@ -147,7 +147,7 @@
     <label for="foto">Imagem da pessoa (nome do ficheiro)</label>
     <input id="foto" type="text" placeholder="filipe-almeida.png" autocomplete="off">
     <div class="ajuda">A imagem tem de estar na pasta de imagens (ver IMG_BASE).</div>
-    <div class="aviso" id="aviso-foto">Imagem não encontrada. Confirme o nome do ficheiro.</div>
+    <div class="aviso" id="aviso-foto">Imagem não encontrada. Confirma o nome do ficheiro.</div>
 
     <div class="botoes">
       <button class="btn-primario" id="btn-url">Gerar URL da assinatura</button>
@@ -171,27 +171,26 @@
 
     <div class="botoes">
       <button class="btn-primario" id="btn-copiar-assinatura">Copiar assinatura</button>
-      <button class="btn-secundario" id="btn-copiar-html">Copiar código HTML</button>
     </div>
 
     <div class="instrucoes">
       <h3>Outlook (Windows / Mac / Web)</h3>
       <ol>
-        <li>Clique em <strong>Copiar assinatura</strong>.</li>
+        <li>Clica em <strong>Copiar assinatura</strong>.</li>
         <li>Definições → Correio → Assinaturas → Nova assinatura.</li>
-        <li>Cole (Ctrl/Cmd + V) no editor e guarde.</li>
+        <li>Cola (Ctrl/Cmd + V) no editor e guarda.</li>
       </ol>
       <h3>Gmail</h3>
       <ol>
-        <li>Clique em <strong>Copiar assinatura</strong>.</li>
+        <li>Clica em <strong>Copiar assinatura</strong>.</li>
         <li>Definições (roda dentada) → Ver todas as definições → Geral → Assinatura.</li>
-        <li>Crie uma nova, cole no editor e clique em <em>Guardar alterações</em> no fundo da página.</li>
+        <li>Cria uma nova, cola no editor e clica em <em>Guardar alterações</em> no fundo da página.</li>
       </ol>
       <h3>Apple Mail</h3>
       <ol>
-        <li>Clique em <strong>Copiar assinatura</strong>.</li>
+        <li>Clica em <strong>Copiar assinatura</strong>.</li>
         <li>Mail → Definições → Assinaturas → <strong>+</strong>.</li>
-        <li>Desmarque “Usar sempre o tipo de letra predefinido” e cole.</li>
+        <li>Desmarca “Usar sempre o tipo de letra predefinido” e cola.</li>
       </ol>
     </div>
   </section>
@@ -208,9 +207,9 @@
 const IMG_BASE = "https://ampersassinaturas.github.io/assinaturas-ampers/";
 
 const LINKS = {
-  website:   "https://www.ampers.pt",                        // TODO: confirmar
-  linkedin:  "https://www.linkedin.com/company/ampers",      // TODO: confirmar
-  instagram: "https://www.instagram.com/ampers"              // TODO: confirmar
+  website:   "https://ampers.com",
+  linkedin:  "https://www.linkedin.com/company/ampers",      // TODO: por definir
+  instagram: "https://www.instagram.com/ampers"              // TODO: por definir
 };
 
 const IMAGENS = {
@@ -221,7 +220,7 @@ const IMAGENS = {
 };
 
 const MORADA = [
-  "Rua do Proletariado Nº7 (Lote 1)",
+  "Rua do Proletariado Nº7",
   "2794-076 Carnaxide",
   "Portugal"
 ];
@@ -232,7 +231,7 @@ const FONTE_TEXTO  = "'Cera Pro', Arial, Helvetica, sans-serif";
 
 const EXEMPLO = {
   nome: "Filipe Almeida",
-  cargo: "Marketing Director",
+  cargo: "Executive Director",
   tel: "+351 969 730 083",
   foto: "filipe-almeida.png"
 };
@@ -354,7 +353,7 @@ async function copiarAssinatura() {
     document.execCommand("copy");
     sel.removeAllRanges();
   }
-  toast("Assinatura copiada! Cole no seu cliente de e-mail.");
+  toast("Assinatura copiada! Cola no teu cliente de e-mail.");
 }
 
 /* ---------- Arranque ---------- */
@@ -368,7 +367,7 @@ campos.forEach((c) => {
 
 if (modoColaborador) {
   document.body.classList.add("modo-colaborador");
-  $("subtitulo").textContent = "Esta é a sua assinatura. Copie-a e siga as instruções abaixo.";
+  $("subtitulo").textContent = "Esta é a tua assinatura. Copia-a e segue as instruções abaixo.";
 }
 
 $("btn-url").addEventListener("click", () => {
@@ -381,10 +380,6 @@ $("btn-copiar-url").addEventListener("click", async () => {
   toast("URL copiado!");
 });
 $("btn-copiar-assinatura").addEventListener("click", copiarAssinatura);
-$("btn-copiar-html").addEventListener("click", async () => {
-  await copiarTexto($("assinatura").innerHTML);
-  toast("Código HTML copiado!");
-});
 
 atualizar();
 </script>
