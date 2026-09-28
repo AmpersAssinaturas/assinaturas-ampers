@@ -221,8 +221,7 @@ const IMAGENS = {
 
 const MORADA = [
   "Rua do Proletariado Nº7",
-  "2794-076 Carnaxide",
-  "Portugal"
+  "2794-076 Carnaxide, Portugal"
 ];
 
 const CORES = { navy: "#00173e", coral: "#e28c6c" };
@@ -266,9 +265,9 @@ function gerarAssinatura(d) {
   return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
   <tr>
     <td valign="middle" style="padding:0 20px 0 0;">
-      <img src="${fotoSrc}" width="200" height="175" alt="${esc(d.nome)}" style="display:block;border:0;width:200px;height:175px;">
+      <img src="${fotoSrc}" width="160" height="140" alt="${esc(d.nome)}" style="display:block;border:0;width:160px;height:140px;">
     </td>
-    <td valign="middle" style="padding:0 28px 0 0;">
+    <td valign="middle" style="padding:0;">
       <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
         <tr><td style="font-family:${FONTE_TITULO};font-size:28px;line-height:34px;color:${CORES.coral};white-space:nowrap;padding:0 0 4px 0;">${esc(d.nome)}</td></tr>
         <tr><td style="${txt}font-size:13px;line-height:18px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">${esc(d.cargo.toUpperCase())}</td></tr>
@@ -278,15 +277,20 @@ function gerarAssinatura(d) {
         <tr><td style="${txt}font-size:13px;line-height:18px;white-space:nowrap;">${MORADA.map(esc).join("<br>")}</td></tr>
       </table>
     </td>
-    <td valign="middle" style="border-left:2px solid ${CORES.navy};padding:0 0 0 28px;">
+    <td valign="middle" style="padding:0 26px;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
+        <tr><td height="90" style="height:90px;border-left:1px solid ${CORES.navy};font-size:1px;line-height:1px;">&nbsp;</td></tr>
+      </table>
+    </td>
+    <td valign="middle" style="padding:0;">
       <a href="${LINKS.website}" target="_blank" style="text-decoration:none;">
         <img src="${IMG_BASE + IMAGENS.logo}" width="170" height="55" alt="Ampers - Talent. Amplified" style="display:block;border:0;width:170px;height:55px;">
       </a>
-      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;margin-top:16px;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
         <tr>
-          <td style="padding:16px 8px 0 0;">${icone("website")}</td>
-          <td style="padding:16px 8px 0 0;">${icone("linkedin")}</td>
-          <td style="padding:16px 0 0 0;">${icone("instagram")}</td>
+          <td style="padding:12px 8px 0 0;">${icone("website")}</td>
+          <td style="padding:12px 8px 0 0;">${icone("linkedin")}</td>
+          <td style="padding:12px 0 0 0;">${icone("instagram")}</td>
         </tr>
       </table>
     </td>
