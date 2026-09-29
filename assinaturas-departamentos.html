@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Assinaturas Departamentos Ampers</title>
+<style>
+  :root {
+    --navy: #00173e;
+    --coral: #e28c6c;
+    --light-blue: #e9f1f9;
+    --purple: #685bc7;
+    --light-purple: #e5d8ec;
+    --chalk: #f7f5ee;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Cera Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--chalk);
+    color: var(--navy);
+  }
+  header {
+    background: var(--navy);
+    color: var(--chalk);
+    padding: 20px 24px;
+  }
+  header h1 {
+    margin: 0;
+    font-family: "Recoleta", Georgia, serif;
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--coral);
+  }
+  header p { margin: 4px 0 0; font-size: 14px; opacity: .8; }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+  }
+  body.modo-colaborador main { grid-template-columns: 1fr; max-width: 820px; }
+  body.modo-colaborador #painel-form { display: none; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 23, 62, .08);
+    min-width: 0;
+  }
+  .card h2 {
+    margin: 0 0 16px;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--purple);
+  }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 6px; }
+  label:first-of-type { margin-top: 0; }
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cfd6e2;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--navy);
+  }
+  input:focus { outline: 2px solid var(--purple); outline-offset: 1px; border-color: transparent; }
+  .ajuda { font-size: 12px; color: #5b6478; margin-top: 4px; }
+  .aviso { font-size: 12px; color: #b3261e; margin-top: 4px; display: none; }
+  .aviso.visivel { display: block; }
+
+  .botoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  button {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 0;
+    cursor: pointer;
+  }
+  .btn-primario { background: var(--coral); color: #fff; }
+  .btn-primario:hover { filter: brightness(.95); }
+  .btn-secundario { background: var(--light-blue); color: var(--navy); }
+  .btn-secundario:hover { background: #dbe7f4; }
+
+  .preview-wrap {
+    background: #fff;
+    border: 1px dashed #cfd6e2;
+    border-radius: 8px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+  #url-box { display: none; margin-top: 16px; }
+  #url-box.visivel { display: block; }
+  #url-box input { background: var(--light-blue); }
+
+  .instrucoes { margin-top: 20px; font-size: 14px; line-height: 1.55; }
+  .instrucoes h3 { font-size: 15px; margin: 16px 0 4px; }
+  .instrucoes ol { margin: 0; padding-left: 20px; }
+
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: all .25s;
+    pointer-events: none;
+  }
+  #toast.visivel { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Assinaturas de e-mail Ampers · Departamentos</h1>
+  <p id="subtitulo">Escreve o nome do departamento para gerar a assinatura.</p>
+</header>
+
+<main>
+  <!-- Formulário (só aparece no modo builder) -->
+  <section class="card" id="painel-form">
+    <h2>Dados do departamento</h2>
+
+    <label for="departamento">Departamento</label>
+    <input id="departamento" type="text" placeholder="Marketing Ampers" autocomplete="off">
+    <div class="aviso" id="aviso-foto">Imagem onda-ampers.png não encontrada. Confirma que está na pasta de imagens.</div>
+
+    <div class="botoes">
+      <button class="btn-primario" id="btn-url">Gerar URL da assinatura</button>
+    </div>
+
+    <div id="url-box">
+      <label for="url-output">URL para partilhar com o departamento</label>
+      <input id="url-output" type="text" readonly>
+      <div class="botoes">
+        <button class="btn-secundario" id="btn-copiar-url">Copiar URL</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pré-visualização -->
+  <section class="card">
+    <h2>Pré-visualização</h2>
+    <div class="preview-wrap">
+      <div id="assinatura"></div>
+    </div>
+
+    <div class="botoes">
+      <button class="btn-primario" id="btn-copiar-assinatura">Copiar assinatura</button>
+    </div>
+
+    <div class="instrucoes">
+      <h3>Outlook (Windows / Mac / Web)</h3>
+      <ol>
+        <li>Clica em <strong>Copiar assinatura</strong>.</li>
+        <li>Definições → Correio → Assinaturas → Nova assinatura.</li>
+        <li>Cola (Ctrl/Cmd + V) no editor e guarda.</li>
+      </ol>
+      <h3>Gmail</h3>
+      <ol>
+        <li>Clica em <strong>Copiar assinatura</strong>.</li>
+        <li>Definições (roda dentada) → Ver todas as definições → Geral → Assinatura.</li>
+        <li>Cria uma nova, cola no editor e clica em <em>Guardar alterações</em> no fundo da página.</li>
+      </ol>
+      <h3>Apple Mail</h3>
+      <ol>
+        <li>Clica em <strong>Copiar assinatura</strong>.</li>
+        <li>Mail → Definições → Assinaturas → <strong>+</strong>.</li>
+        <li>Desmarca “Usar sempre o tipo de letra predefinido” e cola.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   CONFIGURAÇÃO
+   Quando as imagens passarem para o host do website,
+   basta alterar IMG_BASE (terminar sempre com "/").
+   ========================================================= */
+const IMG_BASE = "https://ampersassinaturas.github.io/assinaturas-ampers/";
+
+const LINKS = {
+  website:   "https://ampers.com",
+  linkedin:  "https://www.linkedin.com/company/ampers",      // TODO: por definir
+  instagram: "https://www.instagram.com/ampers"              // TODO: por definir
+};
+
+const IMAGENS = {
+  logo:      "logo-ampers.png",
+  website:   "icon-website.png",
+  linkedin:  "icon_linkedin.png",
+  instagram: "icon_instagram.png",
+  onda:      "onda-ampers.png"
+};
+
+const MORADA = [
+  "Rua do Proletariado Nº7",
+  "2794-076 Carnaxide, Portugal"
+];
+
+const CORES = { navy: "#00173e", coral: "#e28c6c" };
+const FONTE_TITULO = "'Recoleta', Georgia, 'Times New Roman', serif";
+const FONTE_TEXTO  = "'Cera Pro', Arial, Helvetica, sans-serif";
+
+const EXEMPLO = {
+  departamento: "Marketing Ampers"
+};
+
+/* ========================================================= */
+
+const $ = (id) => document.getElementById(id);
+const campos = ["departamento"];
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function lerDados() {
+  const d = {};
+  campos.forEach((c) => { d[c] = $(c).value.trim() || EXEMPLO[c]; });
+  return d;
+}
+
+function gerarAssinatura(d) {
+  const txt = `font-family:${FONTE_TEXTO};color:${CORES.navy};`;
+
+  const icone = (tipo) =>
+    `<a href="${LINKS[tipo]}" target="_blank" style="text-decoration:none;">` +
+    `<img src="${IMG_BASE + IMAGENS[tipo]}" width="26" height="26" alt="${tipo}" ` +
+    `style="display:block;border:0;width:26px;height:26px;"></a>`;
+
+  return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+  <tr>
+    <td valign="middle" style="padding:0 20px 0 0;">
+      <img src="${IMG_BASE + IMAGENS.onda}" width="160" height="140" alt="Ampers" style="display:block;border:0;width:160px;height:140px;">
+    </td>
+    <td valign="middle" style="padding:0;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
+        <tr><td style="font-family:${FONTE_TITULO};font-size:28px;line-height:34px;color:${CORES.coral};white-space:nowrap;padding:0 0 10px 0;">${esc(d.departamento)}</td></tr>
+        <tr><td style="${txt}font-size:13px;line-height:18px;white-space:nowrap;">${MORADA.map(esc).join("<br>")}</td></tr>
+      </table>
+    </td>
+    <td valign="middle" style="padding:0 26px;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
+        <tr><td height="90" style="height:90px;border-left:1px solid ${CORES.navy};font-size:1px;line-height:1px;">&nbsp;</td></tr>
+      </table>
+    </td>
+    <td valign="middle" style="padding:0;">
+      <a href="${LINKS.website}" target="_blank" style="text-decoration:none;">
+        <img src="${IMG_BASE + IMAGENS.logo}" width="170" height="55" alt="Ampers - Talent. Amplified" style="display:block;border:0;width:170px;height:55px;">
+      </a>
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
+        <tr>
+          <td style="padding:12px 8px 0 0;">${icone("website")}</td>
+          <td style="padding:12px 8px 0 0;">${icone("linkedin")}</td>
+          <td style="padding:12px 0 0 0;">${icone("instagram")}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
+function atualizar() {
+  const d = lerDados();
+  $("assinatura").innerHTML = gerarAssinatura(d);
+
+  const img = $("assinatura").querySelector("img");
+  img.onerror = () => $("aviso-foto").classList.add("visivel");
+  img.onload  = () => $("aviso-foto").classList.remove("visivel");
+
+  $("url-box").classList.remove("visivel");
+}
+
+function gerarURL() {
+  const d = lerDados();
+  const url = new URL(location.href.split("?")[0].split("#")[0]);
+  campos.forEach((c) => url.searchParams.set(c, d[c]));
+  return url.toString();
+}
+
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("visivel");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove("visivel"), 2200);
+}
+
+async function copiarTexto(texto) {
+  try {
+    await navigator.clipboard.writeText(texto);
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+}
+
+async function copiarAssinatura() {
+  const el = $("assinatura");
+  const html = el.innerHTML;
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        "text/html":  new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([el.innerText], { type: "text/plain" })
+      })
+    ]);
+  } catch {
+    // Alternativa para browsers sem ClipboardItem: selecionar e copiar
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  }
+  toast("Assinatura copiada! Cola no teu cliente de e-mail.");
+}
+
+/* ---------- Arranque ---------- */
+const params = new URLSearchParams(location.search);
+const modoColaborador = campos.some((c) => params.has(c));
+
+campos.forEach((c) => {
+  if (params.has(c)) $(c).value = params.get(c);
+  $(c).addEventListener("input", atualizar);
+});
+
+if (modoColaborador) {
+  document.body.classList.add("modo-colaborador");
+  $("subtitulo").textContent = "Esta é a tua assinatura. Copia-a e segue as instruções abaixo.";
+}
+
+$("btn-url").addEventListener("click", () => {
+  $("url-output").value = gerarURL();
+  $("url-box").classList.add("visivel");
+  $("url-output").select();
+});
+$("btn-copiar-url").addEventListener("click", async () => {
+  await copiarTexto($("url-output").value);
+  toast("URL copiado!");
+});
+$("btn-copiar-assinatura").addEventListener("click", copiarAssinatura);
+
+atualizar();
+</script>
+</body>
+</html>
