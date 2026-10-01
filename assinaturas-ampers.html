@@ -136,16 +136,16 @@
     <h2>Dados do colaborador</h2>
 
     <label for="nome">Nome</label>
-    <input id="nome" type="text" placeholder="Filipe Almeida" autocomplete="off">
+    <input id="nome" type="text" placeholder="Nome Apelido" autocomplete="off">
 
     <label for="cargo">Cargo</label>
-    <input id="cargo" type="text" placeholder="Executive Director" autocomplete="off">
+    <input id="cargo" type="text" placeholder="Cargo" autocomplete="off">
 
     <label for="tel">Nº telemóvel</label>
-    <input id="tel" type="text" placeholder="+351 969 730 083" autocomplete="off">
+    <input id="tel" type="text" placeholder="+351 9XX XXX XXX" autocomplete="off">
 
     <label for="foto">Imagem da pessoa (nome do ficheiro)</label>
-    <input id="foto" type="text" placeholder="filipe-almeida.png" autocomplete="off">
+    <input id="foto" type="text" placeholder="nome-apelido.png" autocomplete="off">
     <div class="ajuda">A imagem tem de estar na pasta de imagens (ver IMG_BASE).</div>
     <div class="aviso" id="aviso-foto">Imagem não encontrada. Confirma o nome do ficheiro.</div>
 
@@ -228,13 +228,6 @@ const CORES = { navy: "#00173e", coral: "#e28c6c" };
 const FONTE_TITULO = "'Recoleta', Georgia, 'Times New Roman', serif";
 const FONTE_TEXTO  = "'Cera Pro', Arial, Helvetica, sans-serif";
 
-const EXEMPLO = {
-  nome: "Filipe Almeida",
-  cargo: "Executive Director",
-  tel: "+351 969 730 083",
-  foto: "filipe-almeida.png"
-};
-
 /* ========================================================= */
 
 const $ = (id) => document.getElementById(id);
@@ -248,7 +241,7 @@ function esc(s) {
 
 function lerDados() {
   const d = {};
-  campos.forEach((c) => { d[c] = $(c).value.trim() || EXEMPLO[c]; });
+  campos.forEach((c) => { d[c] = $(c).value.trim(); });
   return d;
 }
 
@@ -265,7 +258,9 @@ function gerarAssinatura(d) {
   return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
   <tr>
     <td valign="middle" style="padding:0 17px 0 0;">
-      <img src="${fotoSrc}" width="136" height="119" alt="${esc(d.nome)}" style="display:block;border:0;width:136px;height:119px;">
+      ${d.foto
+        ? `<img src="${fotoSrc}" width="136" height="119" alt="${esc(d.nome)}" style="display:block;border:0;width:136px;height:119px;">`
+        : `<div style="width:136px;height:119px;background:#e9f1f9;"></div>`}
     </td>
     <td valign="middle" style="padding:0;">
       <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
@@ -302,11 +297,25 @@ function atualizar() {
   const d = lerDados();
   $("assinatura").innerHTML = gerarAssinatura(d);
 
-  const img = $("assinatura").querySelector("img");
-  img.onerror = () => $("aviso-foto").classList.add("visivel");
-  img.onload  = () => $("aviso-foto").classList.remove("visivel");
+  $("aviso-foto").classList.remove("visivel");
+  if (d.foto) {
+    const img = $("assinatura").querySelector("img");
+    img.onerror = () => $("aviso-foto").classList.add("visivel");
+    img.onload  = () => $("aviso-foto").classList.remove("visivel");
+  }
 
   $("url-box").classList.remove("visivel");
+}
+
+function camposEmFalta() {
+  return campos.filter((c) => !$(c).value.trim());
+}
+
+function exigirCampos() {
+  if (camposEmFalta().length === 0) return true;
+  toast("Preenche todos os campos primeiro.");
+  $(camposEmFalta()[0]).focus();
+  return false;
 }
 
 function gerarURL() {
@@ -338,6 +347,7 @@ async function copiarTexto(texto) {
 }
 
 async function copiarAssinatura() {
+  if (!exigirCampos()) return;
   const el = $("assinatura");
   const html = el.innerHTML;
   try {
@@ -375,6 +385,7 @@ if (modoColaborador) {
 }
 
 $("btn-url").addEventListener("click", () => {
+  if (!exigirCampos()) return;
   $("url-output").value = gerarURL();
   $("url-box").classList.add("visivel");
   $("url-output").select();

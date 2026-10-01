@@ -136,7 +136,7 @@
     <h2>Dados do departamento</h2>
 
     <label for="departamento">Departamento</label>
-    <input id="departamento" type="text" placeholder="Marketing Ampers" autocomplete="off">
+    <input id="departamento" type="text" placeholder="Nome do departamento" autocomplete="off">
     <div class="aviso" id="aviso-foto">Imagem onda-ampers.png não encontrada. Confirma que está na pasta de imagens.</div>
 
     <div class="botoes">
@@ -219,10 +219,6 @@ const CORES = { navy: "#00173e", coral: "#e28c6c" };
 const FONTE_TITULO = "'Recoleta', Georgia, 'Times New Roman', serif";
 const FONTE_TEXTO  = "'Cera Pro', Arial, Helvetica, sans-serif";
 
-const EXEMPLO = {
-  departamento: "Marketing Ampers"
-};
-
 /* ========================================================= */
 
 const $ = (id) => document.getElementById(id);
@@ -236,7 +232,7 @@ function esc(s) {
 
 function lerDados() {
   const d = {};
-  campos.forEach((c) => { d[c] = $(c).value.trim() || EXEMPLO[c]; });
+  campos.forEach((c) => { d[c] = $(c).value.trim(); });
   return d;
 }
 
@@ -291,6 +287,17 @@ function atualizar() {
   $("url-box").classList.remove("visivel");
 }
 
+function camposEmFalta() {
+  return campos.filter((c) => !$(c).value.trim());
+}
+
+function exigirCampos() {
+  if (camposEmFalta().length === 0) return true;
+  toast("Preenche todos os campos primeiro.");
+  $(camposEmFalta()[0]).focus();
+  return false;
+}
+
 function gerarURL() {
   const d = lerDados();
   const url = new URL(location.href.split("?")[0].split("#")[0]);
@@ -320,6 +327,7 @@ async function copiarTexto(texto) {
 }
 
 async function copiarAssinatura() {
+  if (!exigirCampos()) return;
   const el = $("assinatura");
   const html = el.innerHTML;
   try {
@@ -357,6 +365,7 @@ if (modoColaborador) {
 }
 
 $("btn-url").addEventListener("click", () => {
+  if (!exigirCampos()) return;
   $("url-output").value = gerarURL();
   $("url-box").classList.add("visivel");
   $("url-output").select();
